@@ -1,6 +1,7 @@
 ﻿using DungeonEntities.Dungeon;
 using DungeonEntities.DungeonMaster;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;

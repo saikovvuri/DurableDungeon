@@ -1,5 +1,6 @@
-﻿using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Queue;
+﻿using Azure.Storage.Queues;
+using Azure.Storage.Queues.Models;
+using Microsoft.Azure.Storage;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -34,23 +35,24 @@ namespace DungeonConsole
                 storageConnection = DEFAULT_CONNECTION;
             }
 
-            var storageAccount = CloudStorageAccount.Parse(storageConnection);
-            var client = storageAccount.CreateCloudQueueClient();           
-            var queue = client.GetQueueReference(QUEUE_NAME);
-            queue.CreateIfNotExistsAsync().Wait();
+            // Instantiate a QueueClient which will be used to create and manipulate the queue
+            QueueClient queueClient = new QueueClient(storageConnection, QUEUE_NAME);
 
-            Task.Run(async () => await WatchQueueAsync(queue)).Wait();
+            // Create the queue
+            queueClient.CreateIfNotExists();
+
+            Task.Run(async () => await WatchQueueAsync(queueClient)).Wait();
         }
 
-        private static async Task WatchQueueAsync(CloudQueue queue)
+        private static async Task WatchQueueAsync(QueueClient queueClient)
         {
             var running = true;
             var found = false;
             while (running)
             {
-                var messages = await queue.GetMessagesAsync(5);
-                var dequeue = new List<CloudQueueMessage>();
-                foreach (var message in messages)
+                var response = await queueClient.ReceiveMessagesAsync(5, TimeSpan.FromMinutes(5));
+                var dequeue = new List<QueueMessage>();
+                foreach (var message in response.Value)
                 {
                     dequeue.Add(message);
                     if (!found)
@@ -58,7 +60,7 @@ namespace DungeonConsole
                         Console.WriteLine("*");
                         found = true;
                     }
-                    Console.WriteLine(message.AsString);                    
+                    Console.WriteLine(message.MessageText);                    
                 }
                 if (dequeue.Count < 1)
                 {
@@ -69,7 +71,7 @@ namespace DungeonConsole
                 {
                     foreach(var message in dequeue)
                     {
-                        await queue.DeleteMessageAsync(message);
+                        await queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
                     }
                 }
                 Thread.Sleep(500);

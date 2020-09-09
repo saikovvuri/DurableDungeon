@@ -1,6 +1,7 @@
-﻿using Microsoft.Azure.WebJobs;
+﻿using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Azure.WebJobs;
 
 namespace DungeonEntities.Dungeon
 {
