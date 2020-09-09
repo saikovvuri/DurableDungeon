@@ -3,6 +3,7 @@ using Azure.Storage.Queues.Models;
 using Microsoft.Azure.Storage;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -60,7 +61,8 @@ namespace DungeonConsole
                         Console.WriteLine("*");
                         found = true;
                     }
-                    Console.WriteLine(message.MessageText);                    
+                    
+                    Console.WriteLine(DecodeUtf8Base64(message.MessageText));                    
                 }
                 if (dequeue.Count < 1)
                 {
@@ -77,6 +79,18 @@ namespace DungeonConsole
                 Thread.Sleep(500);
                 found = false;
             }
+        }
+
+        private static string DecodeUtf8Base64(string input)
+        {
+            var bytes = new Span<byte>(new byte[256]); // 256 is arbitrary
+
+            if (!Convert.TryFromBase64String(input, bytes, out var bytesWritten))
+            {
+                return input;
+            }
+
+            return Encoding.UTF8.GetString(bytes.Slice(0, bytesWritten));
         }
     }
 }

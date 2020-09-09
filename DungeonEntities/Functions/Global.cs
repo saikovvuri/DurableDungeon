@@ -18,13 +18,13 @@ namespace DungeonEntities.Functions
         [FunctionName(nameof(StartNewWorkflow))]
         public static async Task StartNewWorkflow(
             [ActivityTrigger](string function, string username) payload,
-            [DurableClient]IDurableClient client,
+            [DurableClient] IDurableOrchestrationClient client,
             ILogger logger
             )
         {
             logger.LogInformation("Starting workflow {workflow} for user {user}",
                 payload.function, payload.username);
-            await client.StartNewAsync(payload.function, payload.username);
+            await client.StartNewAsync<string>(payload.function, payload.username);
         }
 
         public static async Task<DurableOrchestrationStatus> FindJob(

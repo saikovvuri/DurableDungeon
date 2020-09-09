@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using DurableDungeon.Dungeon;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
 using DurableDungeon.DungeonMaster;
 using System;
 using Microsoft.Azure.WebJobs;
@@ -22,7 +22,7 @@ namespace DurableDungeon.Functions
                 HttpRequest req,
             [Queue(Global.QUEUE)]IAsyncCollector<string> console,
             [Table(nameof(User))]CloudTable table,
-            [DurableClient]IDurableClient starter,
+            [DurableClient] IDurableOrchestrationClient starter,
             ILogger log)
         {
             log.LogInformation("NewUser called.");
@@ -46,10 +46,10 @@ namespace DurableDungeon.Functions
                 return new BadRequestObjectResult("Duplicate username is not allowed.");
             }
 
-            await starter.StartNewAsync(nameof(NewUserParallelFunctions.RunUserParallelWorkflow), name);
+            await starter.StartNewAsync<string>(nameof(NewUserParallelFunctions.RunUserParallelWorkflow), name);
             log.LogInformation("Started new parallel workflow for user {user}", name);
 
-            await starter.StartNewAsync(nameof(MonitorFunctions.UserMonitorWorkflow), name);
+            await starter.StartNewAsync<string>(nameof(MonitorFunctions.UserMonitorWorkflow), name);
             log.LogInformation("Started new monitor workflow for user {user}", name);
 
             return new OkResult();
