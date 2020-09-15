@@ -49,13 +49,18 @@ Change `AzureWebJobsStorage` to a connection string if you wish to use real stor
 
 This is a simple walkthrough of the game. The application is designed to showcase all of the [durable patterns and concepts](https://jlik.me/e9n). To issue "post" and "get" I recommend using the [cross-platform HTTP REPL](https://www.hanselman.com/blog/ACommandlineREPLForRESTfulHTTPServices.aspx) tool, but you can use any client of your choice.
 
-> If you want the **easy button** open `index.html` in the `TestHarness` folder. This is configured to connect with the local running instance (you can change the base URL as needed) and provides a rudimentary UI to interact with the game and monitor workflow status. If you experience Cross-Origin Resource Sharing (CORS) issues, consider adding this snippet as a peer to `Values` in your `local.settings.json` file:
+> If you would like an **easy button** open `index.html` in the `TestHarness` folder. This is configured to connect with the local running instance (you can change the base URL as needed) and provides a rudimentary UI to interact with the game and monitor workflow status. If you experience Cross-Origin Resource Sharing (CORS) issues, consider adding this snippet as a peer to `Values` in your `local.settings.json` file:
 
 ``` json
     "Host": {
         "CORS": "*"
     }
 ```
+
+> In order to test against function app running in azure and you dont want to change the base URL everytime.  Set environment variable APIHOST to the base url of the function app in azure. And invoke the below powershell function to generate the `env.js` used inside `index.html`
+
+`.\env.ps1 > env.js`
+
 
 ### Create User
 
