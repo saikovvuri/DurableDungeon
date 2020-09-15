@@ -1,4 +1,6 @@
-const apiBase = "http://localhost:7071/api";
+const apiHost = env.apiHost;
+const apiBase = apiHost.concat("/api");
+
 
 const workflows = [
     "UserConfirmationWorkflow",

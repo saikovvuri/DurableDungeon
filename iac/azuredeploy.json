@@ -71,25 +71,17 @@
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
-            "name": "[variables('hostingPlanName')]",
+            "name": "[variables('hostingPlanName')]",            
             "location": "[parameters('location')]",
+            "kind": "linux",
             "sku": {
-                "name": "Y1",
-                "tier": "Dynamic",
-                "size": "Y1",
-                "family": "Y",
-                "capacity": 0
-            },
-            "kind": "functionapp",
+                "name": "EP1",
+                "tier": "ElasticPremium"
+            },            
             "properties": {
-                "perSiteScaling": false,
-                "maximumElasticWorkerCount": 1,
-                "isSpot": false,
+                "maximumElasticWorkerCount": 20,
                 "reserved": true,
-                "isXenon": false,
-                "hyperV": false,
-                "targetWorkerCount": 0,
-                "targetWorkerSizeId": 0
+                "name": "[variables('hostingPlanName')]"
             }
         },        
         {
@@ -104,7 +96,7 @@
             ],
             "kind": "functionapp,linux",
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",                
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -118,14 +110,22 @@
                         {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';')]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~3"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
                         }
-                    ],
-                    "linuxFxVersion": "dotnet|3.1",
+                    ],                    
                     "cors": {
                         "allowedOrigins": [
                             "*"
                         ]
-                    }
+                    },
+                    "linuxFxVersion": "dotnet|3.1"
                 }
             }
         }
