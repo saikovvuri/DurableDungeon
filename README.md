@@ -16,7 +16,7 @@ The Durable Dungeon is a very simple game I wrote to illustrate a long-running s
 
 1. New user assigned to game. 
 2. A room is created, with a monster. A weapon is placed in the room and the monster holds the treasure.
-3. The user must confirm their commitment in 2 minutes or the character is killed. 
+3. The user must confirm their commitment in 2 minutes or the character is killed.
 4. The user must pick up the weapon, slay the monster, and collect the treasure to win.
 
 Commands are issued via end point "posts". A walkthrough below describes in more detail.
@@ -50,6 +50,7 @@ Change `AzureWebJobsStorage` to a connection string if you wish to use real stor
 This is a simple walkthrough of the game. The application is designed to showcase all of the [durable patterns and concepts](https://jlik.me/e9n). To issue "post" and "get" I recommend using the [cross-platform HTTP REPL](https://www.hanselman.com/blog/ACommandlineREPLForRESTfulHTTPServices.aspx) tool, but you can use any client of your choice.
 
 > If you want the **easy button** open `index.html` in the `TestHarness` folder. This is configured to connect with the local running instance (you can change the base URL as needed) and provides a rudimentary UI to interact with the game and monitor workflow status. If you experience Cross-Origin Resource Sharing (CORS) issues, consider adding this snippet as a peer to `Values` in your `local.settings.json` file:
+
 ``` json
     "Host": {
         "CORS": "*"
@@ -62,13 +63,13 @@ The first step is to create a user. Assume a user named "Pat" for the following 
 
 `set base http://localhost:7071/api` 
 
-(Change the port if your functions run a different one). 
+(Change the port if your functions run a different one).
 
 Issue a POST to the NewUser endpoint:
 
 ```json
 {
-   "name": "Pat" 
+   "name": "Pat"
 }
 ```
 
@@ -76,15 +77,15 @@ At this stage, you have 2 minutes to confirm. Tables named `Inventory`, `Monster
 
 ### Check Monitor Status
 
-You can check the confirmation status with: 
+You can check the confirmation status with:
 
-`GET CheckStatus/Pat/UserConfirmationWorkflow`. 
+`GET CheckStatus/Pat/UserConfirmationWorkflow`.
 
-Check the monitor with: 
+Check the monitor with:
 
 `GET CheckStatus/Pat/UserMonitorWorkflow`.
 
-### Confirm 
+### Confirm
 
 If you wish to confirm game play, issue a `POST ConfirmUser` with:
 
@@ -148,6 +149,12 @@ This will indicate the treasure has been nabbed. The game workflow should end al
 `ConsoleFunctions` - this is necessary to send information to the console. `async` is not allowed directly in orchestrations, so the collector is wrapped in an activity.
 
 `MonitorFunctions` - this has two long-running workflows. The `UserMonitorWorkflow` runs every 20 seconds. It ends when the user dies, when the user obtains the treasure, or when the workflow times out after an hour. The `MonitorUser` activity performs the necessary checks. The `GameMonitorWorkflow` waits for two external events. It will run indefinitely, only "wakes up" when external events are sent to it and terminates when both events for killing the monster and obtaining the treasure have been received.
+
+## Deploy code to Azure
+
+`cd .\DurableDungeon`
+
+`func azure functionapp publish [appname]`
 
 ## Feedback
 
