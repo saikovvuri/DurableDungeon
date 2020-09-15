@@ -1,4 +1,9 @@
 # DurableDungeon
+
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsaikovvuri%2FDurableDungeon%2Fmaster%2Fiac%2Fazuredeploy.json)
+
+[![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fsaikovvuri%2FDurableDungeon%2Fmaster%2Fiac%2Fazuredeploy.json)
+
 A game designed to teach and learn [serverless durable functions](https://jlik.me/e9m) in C#.
 
 📄 Read the related blog post, [Stateful Serverless: Long-Running Workflows with Durable Functions](https://blog.jeremylikness.com/blog/stateful-serverless-long-running-workflows-with-durable-functions/).
@@ -6,6 +11,7 @@ A game designed to teach and learn [serverless durable functions](https://jlik.m
 [![Free Azure Account](https://img.shields.io/badge/FREE-Azure-0077ff)](https://jlik.me/gml) Get your [Free Azure Account](https://jlik.me/gml)
 
 ## Overview
+
 The Durable Dungeon is a very simple game I wrote to illustrate a long-running serverless application architecture. It is entirely serverless and uses [Table Storage](https://jlik.me/fbd) as the database back end (or the preview [Durable Entities](https://jlik.me/gar)). The general game flow works like this:
 
 1. New user assigned to game. 
@@ -16,7 +22,8 @@ The Durable Dungeon is a very simple game I wrote to illustrate a long-running s
 Commands are issued via end point "posts". A walkthrough below describes in more detail.
 
 ## Get started
-Clone the repository. 
+
+Clone the repository.
 
 > *Optional* :
 >
